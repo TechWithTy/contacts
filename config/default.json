@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://Tyrique:mernstackapp@cluster0-iq8my.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret":  "secret"
+}
