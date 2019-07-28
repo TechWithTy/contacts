@@ -8,7 +8,7 @@ import {
   LOGIN_SUCCESS,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
-  USER_LOADED
+  USER_LOADED,LOGOUT
 } from '../types';
 import AuthContext from './authContext';
 import authReducer from './authReducer';
@@ -74,7 +74,7 @@ const AuthState = props => {
     }
   };
   //Logout
-  const logout = () => console.log('logout');
+  const logout = () => dispatch({ type: LOGOUT})
   //Clear Errors
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS });
   return (
