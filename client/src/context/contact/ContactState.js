@@ -1,52 +1,42 @@
+import axios from 'axios';
 import React, { useReducer } from 'react';
-import uuid from 'uuid';
 import {
   ADD_CONTACT,
   CLEAR_CURRENT,
+  CLEAR_FILTER,
+  CONTACT_ERROR,
   DELETE_CONTACT,
-  SET_CURRENT,
-  UPDATE_CONTACT,
   FILTER_CONTACTS,
-  CLEAR_FILTER
+  SET_CURRENT,
+  UPDATE_CONTACT
 } from '../types';
 import ContactContext from './contactContext';
 import ContactReducer from './contactReducer';
 
 const ContactState = props => {
   const initialState = {
-    contacts: [
-      {
-        name: 'Jill Johnson',
-        id: '1000',
-        email: 'jill@gmail.com',
-        phone: '111-111-1111',
-        type: 'Personal'
-      },
-      {
-        name: 'john Johnson',
-        id: '1100',
-        email: 'john@gmail.com',
-        phone: '111-111-1111',
-        type: 'Personal'
-      },
-      {
-        name: 'jake Johnson',
-        id: '1200',
-        email: 'jake@gmail.com',
-        phone: '111-111-1111',
-        type: 'Professional'
-      }
-    ],
+    contacts: [],
     current: null,
-    filtered: null
+    filtered: null,
+    error: null
   };
   const [state, dispatch] = useReducer(ContactReducer, initialState);
 
   //Add Contact
-  const addContact = contact => {
-    contact.id = uuid.v4();
-    dispatch({ type: ADD_CONTACT, payload: contact });
-    console.log(contact.id);
+  const addContact = async contact => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const res = await axios.post('/api/contacts', contact, config);
+      dispatch({ type: ADD_CONTACT, payload: res.data });
+      console.log(contact.id);
+    } catch (err) {
+      dispatch({ type: CONTACT_ERROR, payload: err.response.mg });
+    }
   };
   //Delete Contact
   const deleteContact = id => {
@@ -78,6 +68,7 @@ const ContactState = props => {
         contacts: state.contacts,
         current: state.current,
         filtered: state.filtered,
+        error: state.error,
         addContact,
         deleteContact,
         setCurrent,
