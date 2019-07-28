@@ -11,14 +11,14 @@ const User = require('../models/User');
 //@ route Get api/auth
 //@ desc Get logged in user
 //@  Private
-router.get('/',auth, async (req, res) => {
- try {
-   const user = await User.findById(req.user.id).select('-password');
-   res.json(user);
- } catch (err) {
-   console.error(err.message);
-   res.status(500).send('Server error');
- }
+router.get('/', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 });
 
 //@ route post api/auth
@@ -41,13 +41,13 @@ router.post(
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({ msg: 'invalid Email' });
+        return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ msg: 'Invalid Password' });
+        return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 
       const payload = {
